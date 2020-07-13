@@ -8,7 +8,9 @@ namespace MDD.Profiles
     {
         public MyDailyDataProfiles()
         {
+            // Source -> Target
             CreateMap<MyDailyData, MyDailyDataReadDto>();
+            CreateMap<MyDailyDataCreateDto, MyDailyData>();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MDD.Data;
+using MDD.Models;
 using MDD.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
@@ -30,7 +31,7 @@ namespace MDD.Controllers
         }
 
         // GET api/dailydata/{id}
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="GetDailyDataById")]
         public ActionResult <MyDailyDataReadDto> GetDailyDataById(int id)
         {
             var dailyDataItem = _repository.GetDailyDataById(id);
@@ -40,6 +41,19 @@ namespace MDD.Controllers
             }
 
             return NotFound();
+        }
+
+         // POST api/dailydata
+        [HttpPost]
+        public ActionResult <MyDailyDataReadDto> CreateDailyData(MyDailyDataCreateDto dailyDataCreateDto)
+        {
+            var dailyDataModel = _mapper.Map<MyDailyData>(dailyDataCreateDto);
+            _repository.CreateDailyData(dailyDataModel);
+            _repository.SaveChanges();
+
+            var dailyDataReadDto = _mapper.Map<MyDailyDataReadDto>(dailyDataModel);
+
+            return CreatedAtRoute(nameof(GetDailyDataById), new {Id = dailyDataReadDto.Id}, dailyDataReadDto);
         }
     }
 }
